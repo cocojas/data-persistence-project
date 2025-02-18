@@ -43,6 +43,33 @@ public class ScoreManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
+    public void SetPlayerName(string name)
+    {
+        CurrentScore.PlayerName = name;
+    }
+
+    public void AddScore(int score)
+    {
+        CurrentScore.PlayerScore += score;
+    }
+
+    /// <summary>
+    /// Reset the current score to 0 and save the current score to the high scores
+    /// </summary>
+    public void ResetScore()
+    {
+        SaveCurrentScore();
+        ClearScore();
+    }
+
+    /// <summary>
+    /// Clear the current score without saving it
+    /// </summary>
+    public void ClearScore()
+    {
+        CurrentScore.PlayerScore = 0;
+    }
+
     public Score GetBestScore()
     {
         return GetHighScores().FirstOrDefault();
@@ -77,6 +104,7 @@ public class ScoreManager : MonoBehaviour
 
         if (scoreAdded)
         {
+            Debug.Log($"Added Score: {score.PlayerName} : {score.PlayerScore}");
             SaveScores();
         }
         return scoreAdded;
@@ -87,6 +115,7 @@ public class ScoreManager : MonoBehaviour
         // Only save if there is at least one score
         if (highScores.Scores.Length == 0 || highScores.Scores[0].PlayerName == null || highScores.Scores[0].PlayerName == "" || highScores.Scores[0].PlayerScore == 0)
         {
+            Debug.Log("Just: NO");
             return;
         }
         string json = JsonUtility.ToJson(highScores);
