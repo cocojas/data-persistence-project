@@ -15,6 +15,8 @@ public class ScoreManager : MonoBehaviour
     private const string saveFilename = "savefile.json";
     private string savePath;
 
+    [SerializeField] private string defaultPlayerName = "Player";
+
     public static ScoreManager Instance { get; private set; }
 
     [Serializable]
@@ -45,6 +47,10 @@ public class ScoreManager : MonoBehaviour
 
     public void SetPlayerName(string name)
     {
+        if (name == "")
+        {
+            name = defaultPlayerName;
+        }
         CurrentScore.PlayerName = name;
     }
 
@@ -104,10 +110,15 @@ public class ScoreManager : MonoBehaviour
 
         if (scoreAdded)
         {
-            Debug.Log($"Added Score: {score.PlayerName} : {score.PlayerScore}");
             SaveScores();
         }
         return scoreAdded;
+    }
+
+    public void ClearHighScores()
+    {
+        highScores.Scores = new Score[MAX_HIGH_SCORES];
+        SaveScores();
     }
 
     public void SaveScores()

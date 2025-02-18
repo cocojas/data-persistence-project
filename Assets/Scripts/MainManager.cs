@@ -93,7 +93,7 @@ public class MainManager : MonoBehaviour
 
     private void OnDisable()
     {
-        ResumeGame();
+        Time.timeScale = 1;
     }
 
     public void RestartGame()
