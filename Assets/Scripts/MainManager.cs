@@ -18,6 +18,10 @@ public class MainManager : MonoBehaviour
     public Text BestScoreText;
     public GameObject GameOverText;
 
+    public GameObject PauseMenu;
+
+    public bool isPaused { get; private set; } = false;
+
     private bool m_Started = false;
     private int m_Points;
 
@@ -52,6 +56,7 @@ public class MainManager : MonoBehaviour
             }
         }
 
+        PauseMenu.SetActive(false);
         UpdateScoreLabel();
         UpdateBestScoreLabel();
     }
@@ -62,6 +67,7 @@ public class MainManager : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
+                if (isPaused) return;
                 m_Started = true;
                 float randomDirection = Random.Range(-1.0f, 1.0f);
                 Vector3 forceDir = new Vector3(randomDirection, 1, 0);
@@ -75,10 +81,25 @@ public class MainManager : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                ScoreManager.Instance.ResetScore();
-                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+                RestartGame();
             }
         }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            TogglePaused();
+        }
+    }
+
+    private void OnDisable()
+    {
+        ResumeGame();
+    }
+
+    public void RestartGame()
+    {
+        if (!m_GameOver) GameOver();
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     void AddPoint(int point)
@@ -94,6 +115,7 @@ public class MainManager : MonoBehaviour
         m_GameOver = true;
         GameOverText.SetActive(true);
         UpdateBestScoreLabel();
+        SetOrTogglePausedState(false);
     }
 
     private void UpdateScoreLabel()
@@ -111,5 +133,34 @@ public class MainManager : MonoBehaviour
             return;
         }
         BestScoreText.text = $"Best Score : {best.PlayerName} : {best.PlayerScore}";
+    }
+
+    public void LoadMainMenu()
+    {
+        GameOver();
+        SetOrTogglePausedState(false);
+        SceneManager.LoadScene(1);
+    }
+
+    public void TogglePaused()
+    {
+        SetOrTogglePausedState(null);
+    }
+
+    public void PauseGame()
+    {
+        SetOrTogglePausedState(true);
+    }
+
+    public void ResumeGame()
+    {
+        SetOrTogglePausedState(false);
+    }
+
+    private void SetOrTogglePausedState(bool? state)
+    {
+        isPaused = (state == null) ? !isPaused : (bool)state;
+        Time.timeScale = isPaused ? 0 : 1;
+        PauseMenu.SetActive(isPaused);
     }
 }
