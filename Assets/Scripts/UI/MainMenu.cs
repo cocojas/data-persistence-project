@@ -14,12 +14,15 @@ public class MainMenu : MonoBehaviour
     private UIDocument document;
     private Label bestScoreLabel;
     private TextField playerNameField;
+    private VisualElement highScoresPanel;
 
     private static Dictionary<string, Func<MainMenu, Action>> buttonActions = new Dictionary<string, Func<MainMenu, Action>>
     {
         { "StartButton", (obj) => obj.OnStartButtonClicked },
         { "QuitButton", (m) => m.OnQuitClicked },
         { "HighScoresButton", (m) => m.OnHighScoresButtonClicked },
+        { "ClearHighScoresButton", (m) => m.OnClearHighScoresButtonClicked },
+        { "BackToMenuButton", (m) => m.OnHighScoresDismissedClicked }
         // { "TestButton", (m) => m.OnTestButtonClicked }
     };
 
@@ -30,6 +33,7 @@ public class MainMenu : MonoBehaviour
 
         bestScoreLabel = root.Q<Label>("BestScoreLabel");
         playerNameField = root.Q<TextField>("PlayerNameField");
+        highScoresPanel = root.Q<VisualElement>("HighScoresPanel");
     }
 
     private void OnEnable()
@@ -96,7 +100,28 @@ public class MainMenu : MonoBehaviour
 #endif
     }
 
+    public void ShowHighScores()
+    {
+        highScoresPanel.visible = true;
+    }
+
+    public void HideHighScores()
+    {
+        highScoresPanel.visible = false;
+    }
+
+    private void OnHighScoresDismissedClicked()
+    {
+        HideHighScores();
+    }
+
     private void OnHighScoresButtonClicked()
+    {
+        ShowHighScores();
+        UpdateScoresAndPlayerNames();
+    }
+
+    private void OnClearHighScoresButtonClicked()
     {
         Debug.Log("==> Clearning High Scores");
         ScoreManager.Instance.ClearHighScores();
@@ -105,7 +130,14 @@ public class MainMenu : MonoBehaviour
 
     private void UpdateScoresAndPlayerNames()
     {
-        var bestScore = ScoreManager.Instance.GetBestScore();
+        var highScores = ScoreManager.Instance.GetHighScores();
+        if (highScores == null || highScores.Count == 0)
+        {
+            bestScoreLabel.text = "Best Score : None";
+            return;
+        }
+
+        var bestScore = highScores[0];
         if (bestScore.PlayerName != null && bestScore.PlayerScore != 0)
         {
             if (bestScore.PlayerName != "")
@@ -120,6 +152,23 @@ public class MainMenu : MonoBehaviour
         else
         {
             bestScoreLabel.text = "Best Score : None";
+        }
+
+        int maxScores = Math.Min(10, highScores.Count);
+        for (int i = 0; i < maxScores; i++)
+        {
+            var scoreLabel = highScoresPanel.Q<Label>($"hs-slot-{i}");
+            if (i < highScores.Count && highScores[i].PlayerScore != 0)
+            {
+                var score = highScores[i];
+                scoreLabel.text = $"#{i + 1} : {score.PlayerName} : {score.PlayerScore}";
+                scoreLabel.style.display = DisplayStyle.Flex;
+            }
+            else
+            {
+                scoreLabel.text = "";
+                scoreLabel.style.display = DisplayStyle.None;
+            }
         }
 
         playerNameField.value = ScoreManager.Instance.CurrentScore.PlayerName;

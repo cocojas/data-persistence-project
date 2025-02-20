@@ -126,6 +126,10 @@ public class ScoreManager : MonoBehaviour
         // Only save if there is at least one score
         if (highScores.Scores.Length == 0 || highScores.Scores[0].PlayerName == null || highScores.Scores[0].PlayerName == "" || highScores.Scores[0].PlayerScore == 0)
         {
+            if (File.Exists(savePath))
+            {
+                File.Delete(savePath);
+            }
             return;
         }
         string json = JsonUtility.ToJson(highScores);
