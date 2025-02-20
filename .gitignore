@@ -78,6 +78,10 @@ crashlytics-build.properties
 # Web Build Directory
 /[Ww]eb\ [Bb]uild/*
 
+# WebGL Connect
+connectwebgl.zip
+webgl_sharing
+
 # OS Files
 .DS_Store
 .AppleDouble
