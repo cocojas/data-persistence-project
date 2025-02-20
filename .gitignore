@@ -62,6 +62,9 @@ sysinfo.txt
 *.unitypackage.meta
 *.app
 
+# Unity Connect Project Settings
+com.unity.connect.share/
+
 # Crashlytics generated file
 crashlytics-build.properties
 
@@ -71,6 +74,9 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+
+# Web Build Directory
+/[Ww]eb\ [Bb]uild/*
 
 # OS Files
 .DS_Store
