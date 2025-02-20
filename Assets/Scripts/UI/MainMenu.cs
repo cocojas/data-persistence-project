@@ -162,12 +162,10 @@ public class MainMenu : MonoBehaviour
             {
                 var score = highScores[i];
                 scoreLabel.text = $"#{i + 1} : {score.PlayerName} : {score.PlayerScore}";
-                scoreLabel.style.display = DisplayStyle.Flex;
             }
             else
             {
-                scoreLabel.text = "";
-                scoreLabel.style.display = DisplayStyle.None;
+                scoreLabel.text = $"#{i + 1} : No Score";
             }
         }
 
