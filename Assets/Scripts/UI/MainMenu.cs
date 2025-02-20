@@ -88,7 +88,7 @@ public class MainMenu : MonoBehaviour
         {
             ScoreManager.Instance.SetPlayerName(playerNameField.value);
         }
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(1);
     }
 
     private void OnQuitClicked()

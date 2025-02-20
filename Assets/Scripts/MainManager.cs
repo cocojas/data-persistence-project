@@ -139,7 +139,7 @@ public class MainManager : MonoBehaviour
     {
         GameOver();
         SetOrTogglePausedState(false);
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(0);
     }
 
     public void TogglePaused()
